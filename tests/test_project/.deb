@@ -1,0 +1,4 @@
+# Add debian packages one per line with version information here
+
+supervisor==3.0a8-1.1
+postgresql-9.1>=9.1.1-1

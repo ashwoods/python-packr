@@ -1,0 +1,16 @@
+Source: {{source}}
+Section: python
+Priority: optional
+Maintainer: {{author}} <{{author_email}}>
+Build-Depends: python-virtualenv, python, {{build_depends}}
+XS-Python-Version: >=2.7
+Standards-Version: 3.9.3
+Vcs-Git:
+Homepage: {{url}}
+
+Package: {{source}}
+Architecture: {{arch}}
+Depends: ${misc:Depends}, ${python:Depends}
+Description: {{short_description}}
+ A python debianized package for {{project}}
+
