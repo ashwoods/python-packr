@@ -50,8 +50,6 @@ class Pack(Command):
 
 
     def execute(self, args):
-    # posible requirement files
-
 
         env = Environment(loader=PackageLoader('packr', 'templates'))
         control = env.get_template('control')
