@@ -23,9 +23,12 @@ def main():
     user = args['--user']
     python = args['--python']
 
-    builder = Packr(srcdir=srcdir, destdir=destdir, user=user, python=python)
-    builder.fill_templates()
-    builder.print_control()
+    packr = Packr(srcdir=srcdir, destdir=destdir, user=user, python=python)
+    packr.setup()
+#    print(packr.control)
+#    print(packr.changelog)
+#    print(packr.postinst)
+#    print(packr.rules)
 
 if __name__ == '__main__':
     sys.exit(main() or 0)

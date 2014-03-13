@@ -1,8 +1,7 @@
 # build
-*.egg-info/
-build/
-dist/
-__pycache__/
+#*.egg-info/
+#build/
+#dist/
 
 # Basics
 *.py[cod]
