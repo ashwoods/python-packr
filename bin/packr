@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+"""
+Usage: packr [options]
+
+-d, --destination <path>  installation destination
+-p, --python <version>    python version to use
+-u, --user <name>         user
+-s, --source <path>       python project to pack
+
+"""
+
+import sys
+
+from docopt import docopt
+from packr import Packr
+
+def main():
+    args = docopt(__doc__, version='0.1.1rc')
+
+    srcdir = args['--source']
+    destdir = args['--destination']
+    user = args['--user']
+    python = args['--python']
+
+    builder = Packr(srcdir=srcdir, destdir=destdir, user=user, python=python)
+    builder.fill_templates()
+    builder.print_control()
+
+if __name__ == '__main__':
+    sys.exit(main() or 0)
+
