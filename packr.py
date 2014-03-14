@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from jinja2 import Template
 from jinja2 import Environment, FileSystemLoader
@@ -42,6 +43,11 @@ class Packr(object):
         preinst = env.get_template('preinst')
         rules = env.get_template('rules')
 
+        debian_dir = os.path.join(self.srcdir, 'debian')
+
+        if not os.path.exists(debian_dir):
+            os.mkdir(debian_dir) 
+
         # Fill in the templates
         self.control = control.render(
             name= package['name'],
@@ -69,9 +75,21 @@ class Packr(object):
            python=self.python,
         )
 
+        # Write files to debian/
+        self.write_deb_file(self.control, 'control')
+        self.write_deb_file(self.changelog, 'changelog')
+        self.write_deb_file(self.preinst, 'preinst')
+        self.write_deb_file(self.rules, 'rules')
 
+
+    def write_deb_file(self, contents, name):
+        with open(os.path.join(self.srcdir, 'debian', name), "w+") as deb_file:
+            print(contents, file=deb_file)
+
+    
     def build(self):
-        pass
+        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], cwd=self.srcdir)
+        p.wait()
 
 #    @property 
 #    def control(self):
