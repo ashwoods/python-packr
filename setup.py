@@ -40,4 +40,6 @@ setup(name='packr',
           'Topic :: Software Development :: Build Tools',
           'Topic :: System :: Installation/Setup',
           'Topic :: Utilities',
-      ])
+      ],
+      test_suite = 'test.tests',
+      )

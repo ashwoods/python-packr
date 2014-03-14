@@ -6,6 +6,7 @@ import unittest
 from packr import Packr
 
 TEST_INSTALL_ROOT_FOLDER = 'test_root'
+TEST_PYTHON_PROJECT_PATH = './test/test_project'
 
 class PackrTests(unittest.TestCase):
     
@@ -14,16 +15,20 @@ class PackrTests(unittest.TestCase):
         if not os.path.exists(TEST_INSTALL_ROOT_FOLDER):
             os.mkdir(TEST_INSTALL_ROOT_FOLDER)
 
+    def test_defaults(self):
+        pass
+
     def test_missing_values_in_setup_file(self):
+        #self.assertRaises()
         pass
 
     def test_source_by_path(self):
         pass
 
     def test_dest_dir_env_var_set(self):
-        packr = Packr(destdir="/opt/user")
+        packr = Packr(destdir="/opt/user", srcdir=TEST_PYTHON_PROJECT_PATH)
         packr.setup()
-        assertEquals(packr.destdir, os.env['DH_VIRTUALENV_INSTALL_ROOT'])
+        self.assertEqual(packr.destdir, os.environ['DH_VIRTUALENV_INSTALL_ROOT'])
     
     def test_python(self):
         pass
