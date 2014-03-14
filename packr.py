@@ -12,7 +12,7 @@ TEMPLATES_DIR= os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templat
 
 class Packr(object):
 
-    def __init__(self, srcdir, destdir, user, python):
+    def __init__(self, srcdir=None, destdir=None, user=None, python=None):
         self.srcdir = srcdir
         self.destdir = destdir
         self.user = user
