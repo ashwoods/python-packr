@@ -25,10 +25,7 @@ def main():
 
     packr = Packr(srcdir=srcdir, destdir=destdir, user=user, python=python)
     packr.setup()
-#    print(packr.control)
-#    print(packr.changelog)
-#    print(packr.postinst)
-#    print(packr.rules)
+    packr.build()
 
 if __name__ == '__main__':
     sys.exit(main() or 0)

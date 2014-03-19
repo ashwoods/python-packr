@@ -1,4 +1,4 @@
-import os
+import os, sys
 import subprocess
 
 from jinja2 import Template
@@ -23,7 +23,11 @@ class Packr(object):
         if not self.srcdir:
             self.srcdir = os.getcwd()
         setup_file = os.path.join(self.srcdir, 'setup.py')
-        package = setup_parser.parse_setup_file(setup_file)
+        try:
+            package = setup_parser.parse_setup_file(setup_file)
+        except FileNotFoundError:
+            print(sys.exc_info()[1])
+            exit()
 
         # Set relevant options
         if self.destdir:
@@ -41,6 +45,8 @@ class Packr(object):
         control = env.get_template('control')
         changelog = env.get_template('changelog')
         preinst = env.get_template('preinst')
+        postinst = env.get_template('postinst')
+        postrm = env.get_template('postrm')
         rules = env.get_template('rules')
 
         debian_dir = os.path.join(self.srcdir, 'debian')
@@ -63,6 +69,7 @@ class Packr(object):
             author=package['author'],
             author_email=package['author_email'],
             source=package['name'],
+            version=package['version'],
         )
 
         self.preinst = preinst.render(
@@ -70,6 +77,13 @@ class Packr(object):
                os.path.join(DEFAULT_INSTALL_DIR, package['name'])),
            user=self.user,
         )
+
+        self.postinst = postinst.render{
+        }
+        
+        self.postrm = postrm.render{
+            user=self.user
+        }
         
         self.rules = rules.render(
            python=self.python,
@@ -79,7 +93,12 @@ class Packr(object):
         self.write_deb_file(self.control, 'control')
         self.write_deb_file(self.changelog, 'changelog')
         self.write_deb_file(self.preinst, 'preinst')
+        self.write_deb_file(self.preinst, 'postinst')
+        self.write_deb_file(self.postrm, 'postrm')
         self.write_deb_file(self.rules, 'rules')
+        self.write_deb_file('9', 'compat')
+
+       # Copy conffiles to /debian/etc/init 
 
 
     def write_deb_file(self, contents, name):

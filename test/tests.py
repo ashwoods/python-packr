@@ -2,21 +2,23 @@ import os
 import shutil
 
 import unittest
+from subprocess import call
 
 from packr import Packr
 
-TEST_INSTALL_ROOT_FOLDER = 'test_root'
+TEST_INSTALL_ROOT_FOLDER = '/opt/packr-test'
 TEST_PYTHON_PROJECT_PATH = './test/test_project'
 
 class PackrTests(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        if not os.path.exists(TEST_INSTALL_ROOT_FOLDER):
-            os.mkdir(TEST_INSTALL_ROOT_FOLDER)
-
-    def test_defaults(self):
         pass
+
+    def test_install(self):
+        packr = Packr(destdir=TEST_INSTALL_ROOT_FOLDER, srcdir=TEST_PYTHON_PROJECT_PATH)
+        packr.setup()
+        packr.build()
 
     def test_missing_values_in_setup_file(self):
         #self.assertRaises()
@@ -38,7 +40,10 @@ class PackrTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):    
-        shutil.rmtree(TEST_INSTALL_ROOT_FOLDER)
+        shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'debian'))
+        shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'build'))
+        # delete test user
+        #call(["sudo userdel", packr.user])
     
 if __name__ == '__main__':
     unittest.main()

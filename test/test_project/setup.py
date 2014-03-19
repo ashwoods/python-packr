@@ -1,8 +1,8 @@
 from setuptools import setup
 
-setup(name='test_project',
+setup(name='test-project',
       version='0.1.0',
-      author='test_author',
+      author='test-author',
       author_email='test@test.com',
       url='https://www.example.com',
       description='Test project for testing python-packr.',

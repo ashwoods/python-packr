@@ -1,5 +1,5 @@
-{{source}} (0.1-1) unstable; urgency=low
+{{source}} ({{version}}) UNRELEASED; urgency=low
 
-  * Initial public release
+  * Initial release. (Closes: #XXXXXX)
 
- -- {{author}} <{{author_email}}>  Fri, 01 Nov 2013 17:00:00 +0200
+ -- {{author}} <{{author_email}}>  Tue, 18 Mar 2014 11:25:45 +0000
