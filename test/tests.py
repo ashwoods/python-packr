@@ -40,10 +40,11 @@ class PackrTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):    
-        shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'debian'))
-        shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'build'))
+        #shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'debian'))
+        #shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'build'))
         # delete test user
         #call(["sudo userdel", packr.user])
+        pass
     
 if __name__ == '__main__':
     unittest.main()

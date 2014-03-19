@@ -59,7 +59,7 @@ class Packr(object):
             os.mkdir(debian_dir) 
 
         if not os.path.exists(upstart_dir):
-            os.mkdir(upstart_dir) 
+            os.makedirs(upstart_dir) 
             
         # Fill in the templates
         self.control = control.render(
@@ -85,22 +85,25 @@ class Packr(object):
            user=self.user,
         )
 
-        self.postinst = postinst.render{
-        }
+        self.postinst = postinst.render()
         
-        self.postrm = postrm.render{
+        self.postrm = postrm.render(
             user=self.user
-        }
+        )
         
         self.rules = rules.render(
            python=self.python,
         )
 
-        self.uwsgi_up = uwsgi_up.render{
-        }
+        self.uwsgi_up = uwsgi_up.render()
 
-        self.uwsgi_init = uwsgi_init.render{
-        }
+        self.uwsgi_conf = uwsgi_conf.render()
+
+        # Other non-template file contents
+        self.compat = "9"
+        self.conffiles = """/etc/init/uwsgi_init.conf
+        /etc/init/uwsgi.conf
+        """
 
         # Write files to debian/
         self.write_conf_file(self.control, debian_dir, 'control')
@@ -109,12 +112,14 @@ class Packr(object):
         self.write_conf_file(self.preinst, debian_dir, 'postinst')
         self.write_conf_file(self.postrm, debian_dir, 'postrm')
         self.write_conf_file(self.rules, debian_dir, 'rules')
-        self.write_conf_file('9', debian_dir, 'compat')
+        self.write_conf_file(self.compat, debian_dir, 'compat')
+        self.write_conf_file(self.conffiles, debian_dir, 'compat')
 
-        # Write conffiles to debian/etc/init/ 
+        # Write upstart configuration files to debian/etc/init/ 
         self.write_conf_file(self.uwsgi_up, upstart_dir, 'uwsgi.ini')
         self.write_conf_file(self.uwsgi_conf, upstart_dir, 'uwsgi_init.conf')
-
+        
+        
 
     def write_conf_file(self, contents, folder, name):
         with open(os.path.join(folder, name), "w+") as conf_file:
