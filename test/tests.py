@@ -7,7 +7,7 @@ from subprocess import call
 from packr import Packr
 
 TEST_INSTALL_ROOT_FOLDER = '/opt/packr-test'
-TEST_PYTHON_PROJECT_PATH = './test/test_project'
+TEST_PYTHON_PROJECT_PATH = './test/django-polls'
 
 class PackrTests(unittest.TestCase):
     
@@ -15,7 +15,7 @@ class PackrTests(unittest.TestCase):
     def setUpClass(cls):
         pass
 
-    def test_install(self):
+    def test_build(self):
         packr = Packr(destdir=TEST_INSTALL_ROOT_FOLDER, srcdir=TEST_PYTHON_PROJECT_PATH)
         packr.setup()
         packr.build()
