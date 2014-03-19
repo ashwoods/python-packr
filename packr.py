@@ -113,7 +113,7 @@ class Packr(object):
         self.write_conf_file(self.postrm, debian_dir, 'postrm')
         self.write_conf_file(self.rules, debian_dir, 'rules')
         self.write_conf_file(self.compat, debian_dir, 'compat')
-        self.write_conf_file(self.conffiles, debian_dir, 'compat')
+        self.write_conf_file(self.conffiles, debian_dir, 'conffiles')
 
         # Write upstart configuration files to debian/etc/init/ 
         self.write_conf_file(self.uwsgi_up, upstart_dir, 'uwsgi.ini')
