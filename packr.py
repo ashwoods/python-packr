@@ -40,8 +40,8 @@ class Packr(object):
             self.python = ''
 
         # Project home, also home to the user created in preinst script 
-        self.project_home=os.environ.get(INSTALL_DIR, os.path.join(DEFAULT_INSTALL_DIR, package['name'])),
-            
+        self.project_home=os.environ.get(INSTALL_DIR, os.path.join(DEFAULT_INSTALL_DIR, package['name']))
+
         # Get the templates
         env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
@@ -79,14 +79,15 @@ class Packr(object):
         )
 
         self.preinst = preinst.render(
-           home=self.project_home
+           home=self.project_home,
            user=self.user,
         )
 
         self.postinst = postinst.render()
         
         self.postrm = postrm.render(
-            user=self.user
+            user=self.user,
+            home=self.project_home
         )
         
         self.rules = rules.render(
