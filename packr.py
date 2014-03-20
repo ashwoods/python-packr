@@ -38,6 +38,9 @@ class Packr(object):
             self.python = "--python " +  self.python
         else:
             self.python = ''
+
+        # Project home, also home to the user created in preinst script 
+        self.project_home=os.environ.get(INSTALL_DIR, os.path.join(DEFAULT_INSTALL_DIR, package['name'])),
             
         # Get the templates
         env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
@@ -51,7 +54,7 @@ class Packr(object):
         uwsgi_up = env.get_template('uwsgi.ini')
         uwsgi_conf = env.get_template('uwsgi_init.conf')
         
-        # Make the necessary folders for debian and conf files
+        # Make debian folder
         debian_dir = os.path.join(self.srcdir, 'debian')
 
         if not os.path.exists(debian_dir):
@@ -76,8 +79,7 @@ class Packr(object):
         )
 
         self.preinst = preinst.render(
-           home=os.environ.get(INSTALL_DIR,
-               os.path.join(DEFAULT_INSTALL_DIR, package['name'])),
+           home=self.project_home
            user=self.user,
         )
 
@@ -91,9 +93,14 @@ class Packr(object):
            python=self.python,
         )
 
-        self.uwsgi_up = uwsgi_up.render()
+        self.uwsgi_up = uwsgi_up.render(
+           home=self.project_home
+        )
 
-        self.uwsgi_conf = uwsgi_conf.render()
+        self.uwsgi_conf = uwsgi_conf.render(
+           home=self.project_home
+        )
+            
 
         # Other non-template file contents
         self.compat = "9"
