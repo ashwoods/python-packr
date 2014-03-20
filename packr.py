@@ -116,7 +116,7 @@ debian/uwsgi.ini etc/init"""
         self.write_conf_file(self.control, debian_dir, 'control')
         self.write_conf_file(self.changelog, debian_dir, 'changelog')
         self.write_conf_file(self.preinst, debian_dir, 'preinst')
-        self.write_conf_file(self.preinst, debian_dir, 'postinst')
+        self.write_conf_file(self.postinst, debian_dir, 'postinst')
         self.write_conf_file(self.postrm, debian_dir, 'postrm')
         self.write_conf_file(self.rules, debian_dir, 'rules')
         self.write_conf_file(self.compat, debian_dir, 'compat')
