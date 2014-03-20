@@ -83,7 +83,10 @@ class Packr(object):
            user=self.user,
         )
 
-        self.postinst = postinst.render()
+        self.postinst = postinst.render(
+            user=self.user,
+            home=self.project_home
+        )
         
         self.postrm = postrm.render(
             user=self.user,
