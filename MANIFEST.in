@@ -1,4 +1,2 @@
 recursive-include templates *
 recursive-exclude templates *.swp
-recursive-include conf *
-recursive-exclude conf *.swp
