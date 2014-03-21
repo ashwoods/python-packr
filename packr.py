@@ -54,6 +54,7 @@ class Packr(object):
         postrm = env.get_template('postrm')
         rules = env.get_template('rules')
         install = env.get_template('install')
+        dirs = env.get_template('dirs')
         upstart = env.get_template('upstart.conf')
         uwsgi = env.get_template('uwsgi.ini')
 
@@ -105,6 +106,9 @@ class Packr(object):
             uwsgi_conf='debian/uwsgi.ini /etc/{}'.format(package['name'])
         )
 
+        self.dirs = dirs.render(
+            name=package['name']
+        )
 
         self.upstart = upstart.render(
            home=self.project_home,
@@ -130,6 +134,7 @@ class Packr(object):
         self.write_conf_file(self.rules, debian_dir, 'rules')
         self.write_conf_file(self.compat, debian_dir, 'compat')
         self.write_conf_file(self.install, debian_dir, 'install')
+        self.write_conf_file(self.dirs, debian_dir, 'dirs')
         self.write_conf_file(self.upstart, debian_dir, package['name']+'.conf')
         self.write_conf_file(self.uwsgi, debian_dir, 'uwsgi.ini')
         
