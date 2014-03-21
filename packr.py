@@ -53,15 +53,16 @@ class Packr(object):
         postinst = env.get_template('postinst')
         postrm = env.get_template('postrm')
         rules = env.get_template('rules')
-        uwsgi_up = env.get_template('uwsgi.ini')
-        uwsgi_conf = env.get_template('uwsgi_init.conf')
-        
+        install = env.get_template('install')
+        upstart = env.get_template('upstart.conf')
+        uwsgi = env.get_template('uwsgi.ini')
+
         # Make debian folder
         debian_dir = os.path.join(self.srcdir, 'debian')
 
         if not os.path.exists(debian_dir):
             os.mkdir(debian_dir) 
-
+        
         # Fill in the templates
         self.control = control.render(
             name= package['name'],
@@ -99,19 +100,25 @@ class Packr(object):
            python=self.python,
         )
 
-        self.uwsgi_up = uwsgi_up.render(
+        self.install = install.render(
+            upstart_script='debian/{}.conf /etc/init'.format(package['name']),
+            uwsgi_conf='debian/uwsgi.ini /etc/{}'.format(package['name'])
+        )
+
+
+        self.upstart = upstart.render(
+           home=self.project_home,
+           conf='/etc/{}'.format(package['name'])
+        )
+
+        self.uwsgi = uwsgi.render(
            home=self.project_home
         )
 
-        self.uwsgi_conf = uwsgi_conf.render(
-           home=self.project_home
-        )
             
 
         # Other non-template file contents
         self.compat = "9"
-        self.install = """debian/uwsgi_init.conf etc/init
-debian/uwsgi.ini etc/init"""
 
 
         # Write files to debian/
@@ -123,8 +130,8 @@ debian/uwsgi.ini etc/init"""
         self.write_conf_file(self.rules, debian_dir, 'rules')
         self.write_conf_file(self.compat, debian_dir, 'compat')
         self.write_conf_file(self.install, debian_dir, 'install')
-        self.write_conf_file(self.uwsgi_up, debian_dir, 'uwsgi.ini')
-        self.write_conf_file(self.uwsgi_conf, debian_dir, 'uwsgi_init.conf')
+        self.write_conf_file(self.upstart, debian_dir, package['name']+'.conf')
+        self.write_conf_file(self.uwsgi, debian_dir, 'uwsgi.ini')
         
     def write_conf_file(self, contents, folder, name):
         with open(os.path.join(folder, name), "w+") as conf_file:
