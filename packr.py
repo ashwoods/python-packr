@@ -6,9 +6,10 @@ from jinja2 import Environment, FileSystemLoader
 
 import setup_parser
 
-INSTALL_DIR = 'DH_VIRTUALENV_INSTALL_ROOT'
+INSTALL_DIR_ENV_VAR = 'DH_VIRTUALENV_INSTALL_ROOT'
 DEFAULT_INSTALL_DIR = '/usr/share/python/'
-TEMPLATES_DIR= os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates')
+PACKR_DIR = os.path.abspath(os.path.dirname(__file__))
+TEMPLATES_DIR= os.path.join(PACKR_DIR, 'templates')
 
 class Packr(object):
 
@@ -31,7 +32,7 @@ class Packr(object):
 
         # Set relevant options
         if self.destdir:
-            os.environ[INSTALL_DIR] = self.destdir
+            os.environ[INSTALL_DIR_ENV_VAR] = self.destdir
         if not self.user:
             self.user = package['name'] 
         if self.python:
@@ -40,7 +41,8 @@ class Packr(object):
             self.python = ''
 
         # Project home, also home to the user created in preinst script 
-        self.project_home=os.environ.get(INSTALL_DIR, os.path.join(DEFAULT_INSTALL_DIR, package['name']))
+        self.project_home=os.environ.get(INSTALL_DIR_ENV_VAR,
+                            os.path.join(DEFAULT_INSTALL_DIR, package['name']))
 
         # Get the templates
         env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
@@ -130,22 +132,7 @@ debian/uwsgi.ini etc/init"""
 
     
     def build(self):
-        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], cwd=self.srcdir)
+        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], 
+                             cwd=self.srcdir)
         p.wait()
-
-#    @property 
-#    def control(self):
-#        return self.control
-#
-#    @property 
-#    def changelog(self):
-#        return self.changelog
-#
-#    @property 
-#    def postinst(self):
-#        return self.postinst
-#
-#    @property 
-#    def rules(self):
-#        return self.rules
 

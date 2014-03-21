@@ -8,6 +8,7 @@ from packr import Packr
 
 TEST_INSTALL_ROOT_FOLDER = '/opt/packr-test'
 TEST_PYTHON_PROJECT_PATH = './test/django-polls'
+INSTALL_DIR_ENV_VAR = 'DH_VIRTUALENV_INSTALL_ROOT'
 
 class PackrTests(unittest.TestCase):
     
@@ -15,13 +16,7 @@ class PackrTests(unittest.TestCase):
     def setUpClass(cls):
         pass
 
-    def test_build(self):
-        packr = Packr(destdir=TEST_INSTALL_ROOT_FOLDER, srcdir=TEST_PYTHON_PROJECT_PATH)
-        packr.setup()
-        packr.build()
-
     def test_missing_values_in_setup_file(self):
-        #self.assertRaises()
         pass
 
     def test_source_by_path(self):
@@ -30,7 +25,7 @@ class PackrTests(unittest.TestCase):
     def test_dest_dir_env_var_set(self):
         packr = Packr(destdir="/opt/user", srcdir=TEST_PYTHON_PROJECT_PATH)
         packr.setup()
-        self.assertEqual(packr.destdir, os.environ['DH_VIRTUALENV_INSTALL_ROOT'])
+        self.assertEqual(packr.destdir, os.environ[INSTALL_DIR_ENV_VAR]
     
     def test_python(self):
         pass
@@ -40,10 +35,6 @@ class PackrTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):    
-        #shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'debian'))
-        #shutil.rmtree(os.path.join(TEST_PYTHON_PROJECT_PATH, 'build'))
-        # delete test user
-        #call(["sudo userdel", packr.user])
         pass
     
 if __name__ == '__main__':
