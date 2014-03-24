@@ -3,10 +3,11 @@
 """
 Usage: packr [options]
 
--d, --destination <path>  installation destination
--p, --python <version>    python version to use
--u, --user <name>         user
--s, --source <path>       python project to pack
+-d, --destination <path>    Installation destination. Defaults to
+                            /usr/share/python/<package-name> 
+-p, --python <path>         <path> to python version to use
+-u, --user <name>           User. Defaults to <package-name>   
+-s, --source <path>         <path> to python project to pack using packr
 
 """
 

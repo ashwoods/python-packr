@@ -83,8 +83,8 @@ class Packr(object):
         )
 
         self.preinst = preinst.render(
-           home=self.project_home,
-           user=self.user,
+            home=self.project_home,
+            user=self.user,
         )
 
         self.postinst = postinst.render(
@@ -98,7 +98,7 @@ class Packr(object):
         )
         
         self.rules = rules.render(
-           python=self.python,
+            python=self.python,
         )
 
         self.install = install.render(
@@ -111,12 +111,12 @@ class Packr(object):
         )
 
         self.upstart = upstart.render(
-           home=self.project_home,
-           conf='/etc/{}'.format(package['name'])
+            home=self.project_home,
+            conf='/etc/{}'.format(package['name'])
         )
 
         self.uwsgi = uwsgi.render(
-           home=self.project_home
+            home=self.project_home
         )
 
             
