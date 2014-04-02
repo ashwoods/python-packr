@@ -19,6 +19,10 @@
 
 
 from setuptools import setup
+from pip.req import parse_requirements
+
+requirements = parse_requirements('requirements.txt')
+reqs = [str(r.req) for r in requirements]
 
 setup(name='packr',
       version='0.1.0',
@@ -28,6 +32,7 @@ setup(name='packr',
       description='Debian packaging for Django projects.',
       license='GNU General Public License v2 or later',
       scripts=['bin/packr'],
+      install_requires=reqs,
       py_modules=['packr', 'setup_parser'],
       data_files=[('templates',['templates/changelog',
                                 'templates/control',
