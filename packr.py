@@ -8,8 +8,7 @@ import setup_parser
 
 INSTALL_DIR_ENV_VAR = 'DH_VIRTUALENV_INSTALL_ROOT'
 DEFAULT_INSTALL_DIR = '/usr/share/python/'
-PACKR_DIR = os.path.abspath(os.path.dirname(__file__))
-TEMPLATES_DIR= os.path.join(PACKR_DIR, 'templates')
+TEMPLATES_DIR= os.path.join(sys.prefix, 'templates')
 
 class Packr(object):
 
