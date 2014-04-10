@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, shutil
 import subprocess
 
 from jinja2 import Template
@@ -12,11 +12,13 @@ TEMPLATES_DIR= os.path.join(sys.prefix, 'templates')
 
 class Packr(object):
 
-    def __init__(self, srcdir=None, destdir=None, user=None, python=None):
+    def __init__(self, srcdir=None, destdir=None, user=None,
+                                    python=None, output=None):
         self.srcdir = srcdir
         self.destdir = destdir
         self.user = user
         self.python = python
+        self.output = output
 
     def setup(self):
         # Read project setup.py
@@ -39,6 +41,12 @@ class Packr(object):
         else:
             self.python = ''
 
+        # Path to the generated deb package
+        parentdir = os.path.abspath(os.path.join(self.srcdir, os.pardir))
+        pkgname = package['name'] + '_' + package['version'] + '_' + 'all.deb'
+        self.debpkg = os.path.join(parentdir, pkgname) 
+
+            
         # Project home, also home to the user created in preinst script 
         self.project_home=os.environ.get(INSTALL_DIR_ENV_VAR,
                             os.path.join(DEFAULT_INSTALL_DIR, package['name']))
@@ -146,4 +154,7 @@ class Packr(object):
         p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], 
                              cwd=self.srcdir)
         p.wait()
+        if self.output:
+            shutil.move(self.debpkg,  self.output)
+
 

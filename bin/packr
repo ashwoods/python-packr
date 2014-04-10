@@ -8,6 +8,7 @@ Usage: packr [options]
 -p, --python <path>         <path> to python version to use
 -u, --user <name>           User. Defaults to <package-name>   
 -s, --source <path>         <path> to python project to pack using packr
+-o, --output <path>         Where the package is created. Defaults to parent dir
 
 """
 
@@ -23,8 +24,10 @@ def main():
     destdir = args['--destination']
     user = args['--user']
     python = args['--python']
+    output = args['--output']
 
-    packr = Packr(srcdir=srcdir, destdir=destdir, user=user, python=python)
+    packr = Packr(srcdir=srcdir, destdir=destdir, user=user,
+                                 python=python, output=output)
     packr.setup()
     packr.build()
 
