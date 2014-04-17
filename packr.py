@@ -12,13 +12,13 @@ TEMPLATES_DIR= os.path.join(sys.prefix, 'templates')
 
 class Packr(object):
 
-    def __init__(self, srcdir=None, destdir=None, user=None,
-                                    python=None, output=None):
+    def __init__(self, srcdir, destdir, user, python, output, extra):
         self.srcdir = srcdir
         self.destdir = destdir
         self.user = user
         self.python = python
         self.output = output
+        self.extra = extra
 
     def setup(self):
         # Read project setup.py
@@ -34,12 +34,23 @@ class Packr(object):
         # Set relevant options
         if self.destdir:
             os.environ[INSTALL_DIR_ENV_VAR] = self.destdir
+        
         if not self.user:
             self.user = package['name'] 
+        
         if self.python:
             self.python = "--python " +  self.python
         else:
             self.python = ''
+        
+        if self.extra:
+            debdir = self.extra.pop()
+            inst = ''
+            while self.extra:
+                inst = inst + self.extra.pop() + ' ' + debdir + '\n'
+            self.extra = inst
+        else:
+            self.extra = ''
 
         # Path to the generated deb package
         parentdir = os.path.abspath(os.path.join(self.srcdir, os.pardir))
@@ -62,8 +73,6 @@ class Packr(object):
         rules = env.get_template('rules')
         install = env.get_template('install')
         dirs = env.get_template('dirs')
-        upstart = env.get_template('upstart.conf')
-        uwsgi = env.get_template('uwsgi.ini')
 
         # Make debian folder
         debian_dir = os.path.join(self.srcdir, 'debian')
@@ -109,24 +118,12 @@ class Packr(object):
         )
 
         self.install = install.render(
-            upstart_script='debian/{}.conf /etc/init'.format(package['name']),
-            uwsgi_conf='debian/uwsgi.ini /etc/{}'.format(package['name'])
+            extra=self.extra
         )
 
         self.dirs = dirs.render(
             name=package['name']
         )
-
-        self.upstart = upstart.render(
-            home=self.project_home,
-            conf='/etc/{}'.format(package['name'])
-        )
-
-        self.uwsgi = uwsgi.render(
-            home=self.project_home
-        )
-
-            
 
         # Other non-template file contents
         self.compat = "9"
@@ -142,8 +139,6 @@ class Packr(object):
         self.write_conf_file(self.compat, debian_dir, 'compat')
         self.write_conf_file(self.install, debian_dir, 'install')
         self.write_conf_file(self.dirs, debian_dir, 'dirs')
-        self.write_conf_file(self.upstart, debian_dir, package['name']+'.conf')
-        self.write_conf_file(self.uwsgi, debian_dir, 'uwsgi.ini')
         
     def write_conf_file(self, contents, folder, name):
         with open(os.path.join(folder, name), "w+") as conf_file:

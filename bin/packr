@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 """
-Usage: packr [options]
+Usage: packr [options] [--extra <file>... <dir>]
 
+-h, --help                  Show this help screen.
 -d, --destination <path>    Installation destination. Defaults to
-                            /usr/share/python/<package-name> 
--p, --python <path>         <path> to python version to use
--u, --user <name>           User. Defaults to <package-name>   
+                            /usr/share/python/<package-name>. 
+-p, --python <path>         <path> to python version to use.
+-u, --user <name>           User. Defaults to <package-name>.   
 -s, --source <path>         <path> to python project to pack using packr
--o, --output <path>         Where the package is created. Defaults to parent dir
+-o, --output <path>         Where the package is created.
+                            Defaults to parent dir.
+-e, --extra                 Specifies extra files to include in package.
 
 """
 
@@ -25,9 +28,10 @@ def main():
     user = args['--user']
     python = args['--python']
     output = args['--output']
+    extra = args['<file>']
 
     packr = Packr(srcdir=srcdir, destdir=destdir, user=user,
-                                 python=python, output=output)
+                  python=python, output=output, extra=extra)
     packr.setup()
     packr.build()
 
