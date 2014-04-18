@@ -28,7 +28,6 @@ def main():
     python = args['--python']
     output = args['--output']
     extra = args['FILE']
-    import ipdb; ipdb.set_trace()
 
     packr = Packr(srcdir=srcdir, destdir=destdir, user=user,
                   python=python, output=output, extra=extra)
