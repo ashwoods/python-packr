@@ -12,7 +12,8 @@ TEMPLATES_DIR= os.path.join(sys.prefix, 'templates')
 
 class Packr(object):
 
-    def __init__(self, destdir, user, python, output, extra):
+    def __init__(self, srcdir, destdir, user, python, output, extra):
+        self.srcdir = srcdir
         self.destdir = destdir
         self.user = user
         self.python = python
@@ -21,7 +22,9 @@ class Packr(object):
 
     def setup(self):
         # Read project setup.py
-        setup_file = os.path.join(os.getcwd(), 'setup.py')
+        if not self.srcdir:
+            self.srcdir = os.getcwd()
+        setup_file = os.path.join(self.srcdir, 'setup.py')
         try:
             package = setup_parser.parse_setup_file(setup_file)
         except FileNotFoundError:
@@ -50,10 +53,11 @@ class Packr(object):
             self.extra = ''
 
         # Path to the generated deb package
-        parentdir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+        parentdir = os.path.abspath(os.path.join(self.srcdir, os.pardir))
         pkgname = package['name'] + '_' + package['version'] + '_' + 'all.deb'
         self.debpkg = os.path.join(parentdir, pkgname) 
 
+            
         # Project home, also home to the user created in preinst script 
         self.project_home=os.environ.get(INSTALL_DIR_ENV_VAR,
                             os.path.join(DEFAULT_INSTALL_DIR, package['name']))
@@ -71,7 +75,7 @@ class Packr(object):
         dirs = env.get_template('dirs')
 
         # Make debian folder
-        debian_dir = os.path.join(os.getcwd(), 'debian')
+        debian_dir = os.path.join(self.srcdir, 'debian')
 
         if not os.path.exists(debian_dir):
             os.mkdir(debian_dir) 
@@ -142,7 +146,8 @@ class Packr(object):
 
     
     def build(self):
-        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'])
+        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], 
+                             cwd=self.srcdir)
         p.wait()
         if self.output:
             shutil.move(self.debpkg,  self.output)
