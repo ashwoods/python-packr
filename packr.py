@@ -44,7 +44,7 @@ class Packr(object):
         else:
             self.python = ''
         
-        # Create temporary build folder and copy project folder to it
+        # Create temporary build directory and copy project folder to it
         self.tmp = tempfile.TemporaryDirectory()
         shutil.copytree(self.srcdir, self.tmp)
 
@@ -147,7 +147,7 @@ class Packr(object):
             print(contents, file=conf_file)
     
     def build(self):
-        build_dir = os.path.join(self.tmp, os.path.basename(self.srcdir)
+        build_dir = os.path.join(self.tmp, os.path.basename(self.srcdir))
         pkgname = package['name'] + '_' + package['version'] + '_' + 'all.deb'
         self.debpkg = os.path.join(self.tmp, pkgname) 
 
@@ -157,7 +157,7 @@ class Packr(object):
         if self.output:
             shutil.move(self.debpkg,  self.output)
         else:
-            shutil.move(self.debpkg,  self.srcdir)
+            shutil.move(self.debpkg,  os.getcwd())
 
 
 

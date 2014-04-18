@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 """
-Usage: packr [options] [--extra <file>... <dir>] [<path>]
+Usage:
+    packr [options] [PATH] [extra FILE... DEB_DIR]
 
--h, --help                  Show this help screen.
--d, --destination <path>    Installation destination. Defaults to
-                            /usr/share/python/<package-name>. 
--p, --python <path>         <path> to python version to use.
--u, --user <name>           User. Defaults to <package-name>.   
--o, --output <path>         Where the package is created.
-                            Defaults to parent dir.
--e, --extra                 Specifies extra files to include in package.
-
+Options:
+  -h, --help                  Show this help screen.
+  -d PATH, --dest=PATH        Installation destination. Defaults to
+                              /usr/share/python/<package-name>. 
+  -p PATH, --python=PATH      PATH to python version to use.
+  -u NAME, --user=NAME        User. Defaults to <package-name>.   
+  -o PATH, --output=PATH      Where the package is created.
+                              Defaults to parent dir.
 """
 
 import sys
@@ -22,12 +22,13 @@ from packr import Packr
 def main():
     args = docopt(__doc__, version='0.1.1rc')
 
-    srcdir = args['<path>']
-    destdir = args['--destination']
+    srcdir = args['PATH']
+    destdir = args['--dest']
     user = args['--user']
     python = args['--python']
     output = args['--output']
-    extra = args['<file>']
+    extra = args['FILE']
+    import ipdb; ipdb.set_trace()
 
     packr = Packr(srcdir=srcdir, destdir=destdir, user=user,
                   python=python, output=output, extra=extra)
