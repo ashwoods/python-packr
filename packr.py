@@ -1,4 +1,4 @@
-import os, sys, shutil
+import os, sys, shutil, tempfile
 import subprocess
 
 from jinja2 import Template
@@ -8,7 +8,7 @@ import setup_parser
 
 INSTALL_DIR_ENV_VAR = 'DH_VIRTUALENV_INSTALL_ROOT'
 DEFAULT_INSTALL_DIR = '/usr/share/python/'
-TEMPLATES_DIR= os.path.join(sys.prefix, 'templates')
+TEMPLATES_DIR = os.path.join(sys.prefix, 'templates')
 
 class Packr(object):
 
@@ -21,6 +21,7 @@ class Packr(object):
         self.extra = extra
 
     def setup(self):
+
         # Read project setup.py
         if not self.srcdir:
             self.srcdir = os.getcwd()
@@ -43,21 +44,23 @@ class Packr(object):
         else:
             self.python = ''
         
+        # Create temporary build folder and copy project folder to it
+        self.tmp = tempfile.TemporaryDirectory()
+        shutil.copytree(self.srcdir, self.tmp)
+
+        # Copy extra files to tmp and generate contents for install conffile
         if self.extra:
             debdir = self.extra.pop()
             inst = ''
             while self.extra:
-                inst = inst + self.extra.pop() + ' ' + debdir + '\n'
+                f = self.extra.pop()
+                shutil.copyfile(f, self.tmp)
+                inst = inst + os.path.join(os.pardir, os.path.basename(f)) + \
+                                                            ' ' + debdir + '\n'
             self.extra = inst
         else:
             self.extra = ''
 
-        # Path to the generated deb package
-        parentdir = os.path.abspath(os.path.join(self.srcdir, os.pardir))
-        pkgname = package['name'] + '_' + package['version'] + '_' + 'all.deb'
-        self.debpkg = os.path.join(parentdir, pkgname) 
-
-            
         # Project home, also home to the user created in preinst script 
         self.project_home=os.environ.get(INSTALL_DIR_ENV_VAR,
                             os.path.join(DEFAULT_INSTALL_DIR, package['name']))
@@ -128,7 +131,6 @@ class Packr(object):
         # Other non-template file contents
         self.compat = "9"
 
-
         # Write files to debian/
         self.write_conf_file(self.control, debian_dir, 'control')
         self.write_conf_file(self.changelog, debian_dir, 'changelog')
@@ -143,13 +145,19 @@ class Packr(object):
     def write_conf_file(self, contents, folder, name):
         with open(os.path.join(folder, name), "w+") as conf_file:
             print(contents, file=conf_file)
-
     
     def build(self):
-        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], 
-                             cwd=self.srcdir)
+        build_dir = os.path.join(self.tmp, os.path.basename(self.srcdir)
+        pkgname = package['name'] + '_' + package['version'] + '_' + 'all.deb'
+        self.debpkg = os.path.join(self.tmp, pkgname) 
+
+        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], cwd=build_dir)
         p.wait()
+
         if self.output:
             shutil.move(self.debpkg,  self.output)
+        else:
+            shutil.move(self.debpkg,  self.srcdir)
+
 
 

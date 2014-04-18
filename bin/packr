@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 """
-Usage: packr [options] [--extra <file>... <dir>]
+Usage: packr [options] [--extra <file>... <dir>] [<path>]
 
 -h, --help                  Show this help screen.
 -d, --destination <path>    Installation destination. Defaults to
                             /usr/share/python/<package-name>. 
 -p, --python <path>         <path> to python version to use.
 -u, --user <name>           User. Defaults to <package-name>.   
--s, --source <path>         <path> to python project to pack using packr
 -o, --output <path>         Where the package is created.
                             Defaults to parent dir.
 -e, --extra                 Specifies extra files to include in package.
@@ -23,7 +22,7 @@ from packr import Packr
 def main():
     args = docopt(__doc__, version='0.1.1rc')
 
-    srcdir = args['--source']
+    srcdir = args['<path>']
     destdir = args['--destination']
     user = args['--user']
     python = args['--python']
