@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os, sys, shutil, tempfile
 import subprocess
 
@@ -45,8 +46,13 @@ class Packr(object):
             self.python = ''
         
         # Create temporary build directory and copy project folder to it
-        self.tmpdir = tempfile.TemporaryDirectory()
-        self.tmp = self.tmpdir.name
+        # try....except.. is for python 2 and 3 compatibility
+        try:
+            self.tmpdir = tempfile.TemporaryDirectory()
+            self.tmp = self.tmpdir.name
+        except AttributeError:
+            self.tmpdir = tempfile.mkdtemp()
+            self.tmp = tempfile.gettempdir()
         self.tmp_project = os.path.join(self.tmp, self.package['name'])
         shutil.copytree(self.srcdir, self.tmp_project)
 
@@ -161,8 +167,11 @@ class Packr(object):
         else:
             shutil.move(self.debpkg,  os.getcwd())
         
-        self.tmpdir.cleanup()
-
+        # try....except.. is for python 2 and 3 compatibility
+        try:
+          self.tmpdir.cleanup()
+        except AttributeError:
+          shutil.rmtree(self.tmp_project)
 
 
 
