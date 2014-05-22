@@ -26,10 +26,11 @@ class Packr(object):
         # Read project setup.py
         if not self.srcdir:
             self.srcdir = os.getcwd()
-        setup_file = os.path.join(self.srcdir, 'setup.py')
+        os.chdir(self.srcdir)
+        setup_file = 'setup.py'
         try:
             self.package = setup_parser.parse_setup_file(setup_file)
-        except FileNotFoundError:
+        except IOError:
             print(sys.exc_info()[1])
             exit()
 
@@ -54,7 +55,7 @@ class Packr(object):
             self.tmpdir = tempfile.mkdtemp()
             self.tmp = tempfile.gettempdir()
         self.tmp_project = os.path.join(self.tmp, self.package['name'])
-        shutil.copytree(self.srcdir, self.tmp_project)
+        shutil.copytree(os.getcwd(), self.tmp_project)
 
         # Copy extra files to tmp and generate contents for install conffile
         if self.extra:
@@ -154,24 +155,31 @@ class Packr(object):
         with open(os.path.join(folder, name), "w+") as conf_file:
             print(contents, file=conf_file)
     
-    def build(self):
-        build_dir = os.path.join(self.tmp, os.path.basename(self.srcdir))
-        pkgname = self.package['name'] + '_' + self.package['version'] + '_' + 'all.deb'
-        self.debpkg = os.path.join(self.tmp, pkgname) 
-
-        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], cwd=self.tmp_project)
-        p.wait()
-
-        if self.output:
-            shutil.move(self.debpkg,  self.output)
-        else:
-            shutil.move(self.debpkg,  os.getcwd())
-        
+    def cleanup(self):    
         # try....except.. is for python 2 and 3 compatibility
         try:
           self.tmpdir.cleanup()
         except AttributeError:
           shutil.rmtree(self.tmp_project)
+
+    def build(self):
+        pkgname = self.package['name'] + '_' + self.package['version'] + '_' + 'all.deb'
+        self.debpkg = os.path.join(self.tmp, pkgname) 
+
+        p = subprocess.Popen(['dpkg-buildpackage', '-us', '-uc'], 
+                                                        cwd=self.tmp_project)
+        p.wait()
+
+        if p.returncode:
+            self.cleanup()
+            print("Error while building package")
+            exit()
+
+        if self.output:
+            shutil.move(self.debpkg,  self.output)
+        else:
+            shutil.move(self.debpkg,  os.getcwd())
+            
 
 
 
