@@ -1,4 +1,31 @@
-*.pyc
-.idea/
-*.egg-info/
+# build
+#*.egg-info/
+#build/
+#dist/
 
+# Basics
+*.py[cod]
+*.pyc
+__pycache__
+
+# Logs
+*.log
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+*.pot
+
+# Pycharm
+.idea
+
+# Vim
+
+*~
+*.swp
+*.swo

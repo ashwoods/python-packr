@@ -1,0 +1,2 @@
+userdel {{user}}
+rm -r {{home}}

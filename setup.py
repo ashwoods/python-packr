@@ -1,37 +1,54 @@
-import sys
-import os
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of packr.
+
+# packr is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 2 of the
+# License, or (at your option) any later version.
+
+# packr is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with packr. If not, see
+# <http://www.gnu.org/licenses/>.
+
+
 from setuptools import setup
+from pip.req import parse_requirements
 
-# If you change this version, change it also in docs/conf.py
-version = "0.1.2"
+requirements = parse_requirements('requirements.txt')
+reqs = [str(r.req) for r in requirements]
 
-#doc_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "docs")
-#index_filename = os.path.join(doc_dir, "index.txt")
-#news_filename = os.path.join(doc_dir, "news.txt")
-long_description = """packr - native os packages for your python application."""
-
-setup(name="packr",
-      version=version,
-      description="native os packages for your python applications",
-      long_description=long_description,
+setup(name='packr',
+      version='0.1.0',
+      author='Carlos de las Heras',
+      author_email='cahersan@gmail.com',
+      url='https://github.com/cahersan/packr',
+      description='Debian packaging for Django projects.',
+      license='GNU General Public License v2 or later',
+      scripts=['bin/packr'],
+      install_requires=reqs,
+      py_modules=['packr', 'setup_parser'],
+      data_files=[('templates',['templates/changelog',
+                                'templates/control',
+                                'templates/dirs',
+                                'templates/install',
+                                'templates/postinst',
+                                'templates/postrm',
+                                'templates/preinst',
+                                'templates/rules'])],
       classifiers=[
-        'Development Status :: 4 - Beta/Stable',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Topic :: Software Development :: Build Tools',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.1',
-        'Programming Language :: Python :: 3.2',
+          'Intended Audience :: Developers',
+          'Intended Audience :: System Administrators',
+          'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
+          'Topic :: Software Development :: Build Tools',
+          'Topic :: System :: Installation/Setup',
+          'Topic :: Utilities',
       ],
-      keywords='debian packages',
-      author='Ashley Camba',
-      author_email='ashwoods@gmail.com',
-      url='http://github.com',
-      license='MIT',
-      packages=['packr', 'packr.commands',],
-      install_requires=['Jinja2','draxoft.pkginfo'],
-      entry_points=dict(console_scripts=['packr=packr:main', 'packr-%s=packr:main' % sys.version[:3]]),
-      test_suite='nose.collector',
-      tests_require=['nose', 'virtualenv>=1.6', 'scripttest>=1.1.1', 'mock'],
-      zip_safe=False)
+      test_suite = 'test.tests',
+      )

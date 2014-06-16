@@ -1,0 +1,5 @@
+{{source}} ({{version}}) UNRELEASED; urgency=low
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- {{author}} <{{author_email}}>  Tue, 18 Mar 2014 11:25:45 +0000
